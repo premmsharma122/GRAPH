@@ -224,6 +224,116 @@ public class graph {
             printAllPaths(graph, e.dest, dest, path+src);
         }
     }
+    // Dijkstra Algorithm -> To find smallest part b/w source to destination.
+    static class Pair implements Comparable<Pair>{
+        int n;
+        int path;
+        public Pair(int n, int path){
+            this.n = n;
+            this.path = path;
+        }
+        @Override
+        public int compareTo(Pair P2){
+            return this.path - P2.path;  // path based sorting
+        }
+    }
+
+    public static void dijkstra(ArrayList<Edge>[] graph, int src){
+        int dist[] = new int[graph.length];
+        for(int i=0; i<graph.length; i++){
+            if( i!= src){
+                dist[i] = Integer.MAX_VALUE;
+            }
+        }
+        boolean seen[] = new boolean[graph.length];
+        PriorityQueue<Pair> pq = new PriorityQueue<>();
+        pq.add(new Pair(src, 0));
+        while(!pq.isEmpty()){
+            Pair curr = pq.remove();
+            if(!seen[curr.n]){
+                seen[curr.n]= true;
+                //neighbours
+                for(int i=0; i<graph[curr.n].size(); i++){
+                    Edge  e = graph[curr.n].get(i);
+                    int u = e.src;
+                    int v = e.dest;
+                    int wt = e.wt;
+                    if(dist[u] + wt < dist[v]){
+                        dist[v] = dist[u] + wt;
+                        pq.add(new Pair(v, dist[v]));
+                    }
+                }
+            }
+        }
+        for(int i=0; i<dist.length; i++){
+            System.out.print(dist[i]+" ");
+        }
+        System.out.println();
+    }
+    public static void bellmanFord(ArrayList<Edge>[] graph, int src){
+        int dist[] = new int[graph.length];
+        for(int i=0; i<dist.length; i++){
+            if(i != src){
+                dist[i] = Integer.MAX_VALUE;
+            }
+        }
+        int V = graph.length;
+        for(int i=0; i<V-1; i++){
+            //edges O(E)
+            for(int j=0; j<graph.length; j++){
+                for(int k=0; k<graph[j].size(); k++){
+                    Edge e = graph[j].get(k);
+                    int u = e.src;
+                    int v = e.dest;
+                    int wt = e.wt;
+                    // relation part
+                    if(dist[u] != Integer.MAX_VALUE && dist[u] + wt < dist[v]){
+                        dist[v] = dist[u] + wt;
+                    }
+                }
+
+            }
+        }
+        for(int i=0; i<dist.length; i++){
+            System.out.println(dist[i] + " ");
+        }
+    }
+    // MST : Minimum Spanning Tree By Prims Algorithm ->
+    static class MSTPair implements Comparable<MSTPair> {
+        int v;
+        int cost;
+
+        public MSTPair(int v , int cost){
+            this.v = v;
+            this.cost = cost;
+        }
+        @Override
+        public int compareTo(MSTPair p2){
+            return this.cost - p2.cost;  // cost based sorting
+        }
+    }
+    public static void prims(ArrayList<Edge>[] graph){
+        boolean seen [ ] = new boolean[graph.length];
+        PriorityQueue<MSTPair> pq = new PriorityQueue<>();
+
+        pq.add(new MSTPair(0,0));
+        int finalcost =0;
+        while(!pq.isEmpty()){
+            MSTPair curr = pq.remove();
+            if(!seen[curr.v]){
+                seen[curr.v] = true;
+                finalcost += curr.cost;
+                for(int i=0; i<graph[curr.v].size(); i++){
+                    Edge e = graph[curr.v].get(i);
+                    if (!seen[e.dest]) {  // ✅ To avoid adding already visited nodes
+                        pq.add(new MSTPair(e.dest, e.wt));
+                    }
+                }
+            }
+        }
+        System.out.println(finalcost);
+    }
+    
 
     public static void createGraph(ArrayList<Edge>[] graph){
         for(int i = 0; i < graph.length; i++){
