@@ -1,1 +1,2 @@
-# GRAPH
+#GRAPH
+This repository contains all my graph-related practice code, ranging from beginner to intermediate level. It includes various approaches to tackle graph problems, as well as implementations of some of the most commonly used graph algorithms, especially those important for coding interviews and placements.
