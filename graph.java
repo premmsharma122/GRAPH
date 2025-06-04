@@ -333,6 +333,41 @@ public class graph {
         }
         System.out.println(finalcost);
     }
+    // Strong Connected Components By Kosarajus's Algorithm
+    public static void kosrajus(ArrayList<Edge[] graph, int v){
+        //step 1: get Nodes in the stack
+        StackInteger> st = new Stack<>();
+        boolean seen[] = new boolean[v];
+        for(int i=0; i<v; i++){
+            if(!seen[i]){
+                topSortUtils(graph, i, seen, st);
+            }
+        }
+
+        //step 2: Transpose the graph
+        ArrayList<Edge> transpose = new ArrayList[v];
+        for(int i=0; i<graph.length; i++){
+            seen[i] = false;
+            transpose[i] = new ArrayList<Edge>();
+        }
+
+        // reverse edge's
+        for(int i=0; i<v; i++){
+            for(int j=0; j<graph[i].size(); j++){
+                Edge e = graph[i].get(j); // e.src -> e.dest
+                transpose[e.dest].add(new Edge(e.dest, e.src, j)); // here we reverse the edge by dest -> src and avoid weight of edge in this .
+            }
+        }
+        //step 3: Do DFS according to the stack nodes on the transpose graph.
+        while (!st.isEmpty()) {
+            int curr = st.pop();
+            if(!seen[curr]){
+                System.out.println("SCC -> ");
+                dfsUtils(transpose, curr, seen);
+                System.out.println();
+            }
+        }
+    }
     
 
     public static void createGraph(ArrayList<Edge>[] graph){
