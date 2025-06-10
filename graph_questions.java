@@ -66,6 +66,44 @@ public class graph_questions {
 
         return dist[dest] == Integer.MAX_VALUE ? -1 : dist[dest];
     }
+    // Question 2 : Connecting all cities with lowest cost By PRIMS'S ALGORITHM.
+    static class Edge2 implements Comparable<Edge2>{
+        int dest;
+        int cost;
+
+        public Edge2(int d , int c){
+            this.dest = d;
+            this.cost = c;
+        }
+        @Override
+        public int compareTo(Edge2 e2){
+            return this.cost - e2.cost; // ascending order sorting
+        }
+
+    }
+    public static int connectCities(int cities[][]){
+        PriorityQueue<Edge2> pq  = new PriorityQueue<>();
+        boolean seen[] = new boolean[cities.length];
+
+        pq.add(new Edge2(0, 0));
+        int finalCost = 0;
+
+        while(!pq.isEmpty()){
+            Edge2 curr = pq.remove();
+            if(!seen[curr]){
+                seen[curr]= true;
+                finalCost += curr.cost;
+
+                for(int i=0; i<cities[curr.dest].length; i++){
+                    if(cities[curr.dest][i] != 0){
+                        pq.add(new Edge2(i,cities[curr.dest][i] ))
+                    }
+                }
+            }
+        }
+
+        return finalCost;
+    }
 
     public static void main(String args[]){
         int n = 5;
